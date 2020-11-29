@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@harelpls/use-pusher": "^7.1.0",
-    "@kimf/use-pusher": "github:kimf/use-pusher#react-17",
     "graphql": "^15.4.0",
     "graphql-request": "^3.3.0",
     "next": "10.0.3",
