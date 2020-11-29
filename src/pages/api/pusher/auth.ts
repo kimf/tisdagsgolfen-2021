@@ -12,7 +12,7 @@ const pusher = new Pusher({
   key,
   secret,
   cluster,
-  encrypted: true,
+  useTLS: true,
 })
 
 export default async (req, res) => {
