@@ -16,11 +16,28 @@ const SignIn = () => {
   const [password, setPassword] = useState("")
   const [showPasswordInput, setShowPasswordInput] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [sendingPassword, setSendingPassword] = useState(false)
   const [message, setMessage] = useState<null | AuthMessage>(null)
   const router = useRouter()
-  const { user, signIn } = useUser()
+  const { user, signIn, requestPassword } = useUser()
 
-  const handleSignin = async (e) => {
+  const handleForgotPassword = async () => {
+    setSendingPassword(true)
+    setMessage(null)
+
+    const { error } = await requestPassword(email)
+    if (error) {
+      setMessage({ type: "error", content: error.message })
+    } else {
+      setMessage({
+        type: "note",
+        content: "Kolla i din epost för att återställa lösenord.",
+      })
+    }
+    setSendingPassword(false)
+  }
+
+  const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     setLoading(true)
@@ -29,25 +46,27 @@ const SignIn = () => {
     const { error } = await signIn({ email, password })
     if (error) {
       setMessage({ type: "error", content: error.message })
-    }
-    if (!password) {
-      setMessage({
-        type: "note",
-        content: "Check your email for the magic link.",
-      })
+    } else {
+      if (!password) {
+        setMessage({
+          type: "note",
+          content: "Kolla i din epost efter den magiska länken.",
+        })
+      }
     }
     setLoading(false)
   }
 
   useEffect(() => {
     if (user) {
-      router.replace("/account")
+      router.replace("/play")
     }
-  }, [router, user])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
   if (!user)
     return (
-      <div className="flex flex-col justify-between max-w-lg p-3 m-auto my-64 w-80">
+      <div className="flex flex-col justify-between max-w-lg p-3 m-auto my-12 w-80">
         <div className="flex justify-center pb-12 ">
           <h2 className="text-2xl font-bold">Logga in</h2>
         </div>
@@ -64,19 +83,19 @@ const SignIn = () => {
 
           {!showPasswordInput && (
             <form onSubmit={handleSignin} className="flex flex-col space-y-4">
-              <Input type="email" placeholder="Email" value={email} onChange={setEmail} required />
+              <Input type="email" placeholder="E-post" value={email} onChange={setEmail} required />
               <Button variant="slim" type="submit" loading={loading} disabled={!email.length}>
-                Send magic link
+                Skicka magisk länk
               </Button>
             </form>
           )}
 
           {showPasswordInput && (
             <form onSubmit={handleSignin} className="flex flex-col space-y-4">
-              <Input type="email" placeholder="Email" value={email} onChange={setEmail} required />
+              <Input type="email" placeholder="E-post" value={email} onChange={setEmail} required />
               <Input
                 type="password"
-                placeholder="Password"
+                placeholder="Lösenord"
                 value={password}
                 onChange={setPassword}
                 required
@@ -88,7 +107,7 @@ const SignIn = () => {
                 loading={loading}
                 disabled={!password.length}
               >
-                Sign in
+                Logga In
               </Button>
             </form>
           )}
@@ -102,10 +121,26 @@ const SignIn = () => {
                 setMessage(null)
               }}
             >
-              {`Or sign in with ${showPasswordInput ? "magic link" : "password"}.`}
+              {`Logga in med ${showPasswordInput ? "magisk länk" : "lösenord"}.`}
             </button>
           </span>
         </div>
+
+        <div className="flex items-center my-6">
+          <div className="flex-grow mr-3 border-t border-accents-2" aria-hidden="true"></div>
+          <div className="italic text-accents-4">Eller</div>
+          <div className="flex-grow ml-3 border-t border-accents-2" aria-hidden="true"></div>
+        </div>
+
+        <Button
+          variant="slim"
+          type="button"
+          disabled={!email.length}
+          loading={sendingPassword}
+          onClick={handleForgotPassword}
+        >
+          <span className="ml-2">Återställ lösenord</span>
+        </Button>
       </div>
     )
 

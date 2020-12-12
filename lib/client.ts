@@ -10,18 +10,4 @@ const supabaseClient = createClient(
 //   process.env.SUPABASE_SERVICE_ROLE_KEY,
 // )
 
-export const createEvent = async (starts_at: Date, season_id: number, course_id: number) => {
-  try {
-    const { data, error } = await supabaseClient
-      .from("events")
-      .insert([{ starts_at, season_id, course_id }])
-    if (error) {
-      throw new Error(error.toString())
-    }
-    return data
-  } catch (error) {
-    console.log("error", error)
-  }
-}
-
 export default supabaseClient

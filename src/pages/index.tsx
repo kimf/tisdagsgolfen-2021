@@ -46,7 +46,7 @@ export const getStaticProps = async () => {
       players: data as Player[],
       season: sData as Season,
     },
-    revalidate: 3600,
+    revalidate: 86400,
   }
 }
 

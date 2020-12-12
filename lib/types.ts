@@ -1,15 +1,21 @@
+export type EventType = "points" | "strokes"
+
 export type Course = {
-  id: string
+  id: number
   name: string
+  club: string
 }
 
 export type NewEvent = {
-  id: string
-  course: Course
+  id: number
+  courses: Course
+  scoring_type: EventType
+  team: boolean
+  special: boolean
 }
 
 export type Player = {
-  id: string
+  id: number
   first_name: string
   last_name: string
   status: string
