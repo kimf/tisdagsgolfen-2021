@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from "next"
 import Pusher from "pusher"
 
 const {
@@ -15,7 +16,7 @@ const pusher = new Pusher({
   useTLS: true,
 })
 
-export default async (req, res) => {
+export default (req: NextApiRequest, res: NextApiResponse<Pusher.AuthResponse>) => {
   const socketId = req.body.socket_id
   const channel = req.body.channel_name
   const user_id = req.cookies.user_id

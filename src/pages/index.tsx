@@ -1,67 +1,53 @@
-import Head from "next/head"
-import Link from "next/link"
-import { request } from "graphql-request"
 import { InferGetStaticPropsType } from "next"
+import Head from "next/head"
 
-type Player = {
-  id: string
-  name: string
-  photo: {
-    url: string
-    width: number
-    height: number
-  }
-}
+import supabaseClient from "../../lib/client"
+import { Player, Season } from "../../lib/types"
 
-export const getStaticProps = async () => {
-  const { players }: { players: Player[] } = await request(
-    process.env.NEXT_PUBLIC_GRAPHCMS_URL,
-    `
-      {
-        players {
-          id
-          name
-          photo {
-            url
-            width
-            height
-          }
-        }
-      }
-    `,
-  )
-
-  return {
-    props: {
-      players,
-    },
-    revalidate: 3600,
-  }
-}
-function IndexPage({ players }: InferGetStaticPropsType<typeof getStaticProps>) {
+function IndexPage({ players, season }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
       <Head>
-        <title>Create Next App</title>
+        <title>Tisdagsgolfen {season.year}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <Link href="/play">SPELA GOLF</Link>
-        <hr />
-
-        <h3>Spelare</h3>
-
-        {players &&
-          players.map((player) => (
-            <div className="avatar" key={player.id}>
-              <img src={player.photo.url} width={player.photo.width} height={player.photo.height} />
-              {player.name}
-            </div>
-          ))}
-      </main>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Spelare</th>
+            <th>Poäng</th>
+          </tr>
+        </thead>
+        <tbody>
+          {players &&
+            players.map((player) => (
+              <tr key={player.id}>
+                <td></td>
+                <td>
+                  {player.first_name} {player.last_name[0]}
+                  <span className={`ml2 ${player.status}`} />
+                </td>
+                <td></td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
     </>
   )
+}
+
+export const getStaticProps = async () => {
+  const { data } = await supabaseClient.from("players").select("*")
+  const { data: sData } = await supabaseClient.from("seasons").select("*").limit(1).single()
+  return {
+    props: {
+      players: data as Player[],
+      season: sData as Season,
+    },
+    revalidate: 3600,
+  }
 }
 
 export default IndexPage
