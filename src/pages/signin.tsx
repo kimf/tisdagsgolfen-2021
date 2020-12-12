@@ -99,7 +99,7 @@ const SignIn = () => {
               onClick={() => {
                 if (showPasswordInput) setPassword("")
                 setShowPasswordInput(!showPasswordInput)
-                setMessage({})
+                setMessage(null)
               }}
             >
               {`Or sign in with ${showPasswordInput ? "magic link" : "password"}.`}

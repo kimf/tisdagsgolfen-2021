@@ -3,14 +3,18 @@ import React from "react"
 
 import s from "./Input.module.css"
 
-const Input = (props) => {
-  const { className, children, onChange, ...rest } = props
+interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
+  onChange: React.Dispatch<React.SetStateAction<string>>
+}
+
+const Input = (props: InputProps) => {
+  const { className, onChange, ...rest } = props
 
   const rootClassName = cn(s.root, {}, className)
 
-  const handleOnChange = (e) => {
+  const handleOnChange = (e: React.FormEvent<HTMLInputElement>) => {
     if (onChange) {
-      onChange(e.target.value)
+      onChange(e.currentTarget.value)
     }
     return null
   }
