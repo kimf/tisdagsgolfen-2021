@@ -24,7 +24,6 @@ export const UserContextProvider = (props) => {
     return () => {
       authListener.unsubscribe()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const getUserDetails = (userUuid) =>
@@ -50,6 +49,7 @@ export const UserContextProvider = (props) => {
       setUserDetails(null)
       return supabaseClient.auth.signOut()
     },
+    requestPassword: (email: string) => supabaseClient.auth.api.resetPasswordForEmail(email),
   }
   return <UserContext.Provider value={value} {...props} />
 }

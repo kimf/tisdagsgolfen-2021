@@ -90,6 +90,10 @@ a {
   animation-name: fadeIn;
 }
 
+.transformer {
+  transition: width 3s 0s;
+}
+
 @-webkit-keyframes fadeIn {
   from {
     opacity: 0;
