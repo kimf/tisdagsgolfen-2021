@@ -1,8 +1,8 @@
 import { InferGetStaticPropsType } from "next"
 import Head from "next/head"
 
-import supabaseClient from "../../lib/client"
-import { Player, Season } from "../../lib/types"
+import { connectToDatabase } from "../lib/mongo"
+import { Player, Season } from "../lib/types"
 
 function IndexPage({ players, season }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
@@ -39,12 +39,15 @@ function IndexPage({ players, season }: InferGetStaticPropsType<typeof getStatic
 }
 
 export const getStaticProps = async () => {
-  const { data } = await supabaseClient.from("players").select("*")
-  const { data: sData } = await supabaseClient.from("seasons").select("*").limit(1).single()
+  const { db } = await connectToDatabase()
+
+  const players: Player[] = await db.collection("players").find({}).toArray()
+  const season: Season = { id: 1, year: 2021, status: "ACTIVE" }
+
   return {
     props: {
-      players: data as Player[],
-      season: sData as Season,
+      players,
+      season,
     },
     revalidate: 86400,
   }

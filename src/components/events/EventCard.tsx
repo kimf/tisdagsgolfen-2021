@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { NewEvent } from "../../../lib/types"
+import { NewEvent } from "../../lib/types"
 import Button from "../ui/Button"
 
 const EventCard = ({ event }: { event: NewEvent }) => {

@@ -3,7 +3,6 @@ import "../assets/main.css"
 // import { PusherProvider } from "@harelpls/use-pusher"
 import type { AppProps } from "next/app"
 
-import { UserContextProvider } from "../../lib/UserContext"
 import Layout from "../components/Layout"
 
 // const config = {
@@ -17,11 +16,9 @@ import Layout from "../components/Layout"
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className="max-w-5xl p-6 mx-auto">
-      <UserContextProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </UserContextProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </div>
   )
 }

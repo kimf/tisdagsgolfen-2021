@@ -1,9 +1,17 @@
 export type EventType = "points" | "strokes"
 
+export type Hole = {
+  id: number
+  number: number
+  par: number
+  index: number
+}
+
 export type Course = {
   id: number
   name: string
   club: string
+  holes: Hole[]
 }
 
 export type NewEvent = {

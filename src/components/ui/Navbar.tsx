@@ -1,10 +1,6 @@
 import Link from "next/link"
 
-import { useUser } from "../../../lib/UserContext"
-
 const Navbar = () => {
-  const { user, signOut } = useUser()
-
   return (
     <nav className="mb-12 -m-6 bg-primary">
       <a href="#skip" className="sr-only focus:not-sr-only">
@@ -22,12 +18,13 @@ const Navbar = () => {
             <Link href="/play">
               <a>Spela golf</a>
             </Link>
-            {user && <button onClick={signOut}>Logga ut</button>}
           </div>
         </div>
       </div>
     </nav>
   )
 }
+
+//{user && <button onClick={signOut}>Logga ut</button>}
 
 export default Navbar

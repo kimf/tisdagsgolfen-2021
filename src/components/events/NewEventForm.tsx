@@ -1,9 +1,10 @@
 import { useRouter } from "next/router"
 import { useState } from "react"
 
-import { createEvent, CreateEventParams } from "../../../lib/db/createEvent"
-import { Course } from "../../../lib/types"
+import { createEvent, CreateEventParams } from "../../lib/createEvent"
+import { Course } from "../../lib/types"
 import Button from "../ui/Button"
+import NewCourseForm from "./NewCourseForm"
 
 const NewEventForm = ({ courses }: { courses: Course[] }) => {
   const router = useRouter()
@@ -12,9 +13,12 @@ const NewEventForm = ({ courses }: { courses: Course[] }) => {
     special: false,
     team: false,
     scoring_type: "points",
-    course_id: courses[0].id,
+    course_id: courses.length > 0 ? courses[0].id : null,
   })
   const [saving, setSaving] = useState(false)
+  const [showingModal, setShowingModal] = useState(false)
+
+  const toggleModal = () => setShowingModal(!showingModal)
 
   const setEventKey = (key: string, value: any) => {
     setEventParams({ ...eventParams, [key]: value })
@@ -36,6 +40,17 @@ const NewEventForm = ({ courses }: { courses: Course[] }) => {
   }
 
   const strokes = eventParams?.scoring_type === "strokes"
+
+  if (showingModal) {
+    return (
+      <NewCourseForm
+        onDone={(courseId) => {
+          setEventKey("courseId", courseId)
+          toggleModal()
+        }}
+      />
+    )
+  }
 
   return (
     <div className="flex flex-col p-6 mt-8 rounded shadow bg-accents-1">
@@ -82,18 +97,23 @@ const NewEventForm = ({ courses }: { courses: Course[] }) => {
         </div>
         <label>
           <span>Bana</span>
-          <select
-            value={eventParams.course_id || ""}
-            name="courseId"
-            className="w-full text-black"
-            onChange={(e) => setEventKey("courseId", e.target.value)}
-          >
-            {courses.map((course) => (
-              <option key={course.id} value={course.id}>
-                {course.club} - {course.name}
-              </option>
-            ))}
-          </select>
+          <div className="flex gap-4">
+            <select
+              value={eventParams.course_id || ""}
+              name="courseId"
+              className="w-full text-black"
+              onChange={(e) => setEventKey("courseId", e.target.value)}
+            >
+              {courses.map((course) => (
+                <option key={course.id} value={course.id}>
+                  {course.club} - {course.name}
+                </option>
+              ))}
+            </select>
+            <Button variant="slim" type="button" onClick={toggleModal}>
+              NY BANA
+            </Button>
+          </div>
         </label>
 
         <Button
